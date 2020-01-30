@@ -1,5 +1,9 @@
 #!/usr/bin/python3
 
+# TO DO:
+# Add handling for when a user isn't found in Redis, or when a user has a NULL trustscore
+# Add handling for calls with successful PIN validation to pass back to Ast DP for outbound routing
+
 from asterisk.agi import *
 import redis
 
@@ -20,14 +24,9 @@ agioutput2 = str(extension) + " PIN: " + str(pin)
 agi.verbose(agioutput1)
 agi.verbose(agioutput2)
 
+# agi.get_data timeout is in ms, not s as indicated in the documentation
 userinput = agi.get_data('vm-password', 2000, 4)
-#agi.stream_file('vm-instructions')
-#pin1 = agi.wait_for_digit(5)
-#pin2 = agi.wait_for_digit(5)
-#pin3 = agi.wait_for_digit(5)
-#pin4 = agi.wait_for_digit(5)
 
-#userinput = str(pin1) + str(pin2) + str(pin3) + str(pin4)
 agi.verbose(userinput)
 if int(userinput) == pin:
 	newscore = int(score) - 10
